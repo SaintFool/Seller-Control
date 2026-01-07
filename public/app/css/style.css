@@ -1,0 +1,183 @@
+/* === ESTILOS BASE (MOBILE FIRST) === */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    color: #333;
+    /* Quitamos el centrado vertical para permitir el scroll natural */
+    padding: 20px 0; 
+}
+
+.container {
+    background-color: white;
+    padding: 20px; /* Un poco menos de padding en móviles */
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 90%; /* Ocupa el 90% del ancho, dejando un pequeño margen */
+    max-width: 500px; /* Un ancho máximo cómodo para móviles y tablets pequeñas */
+    margin: 0 auto; /* Centra el contenedor horizontalmente */
+    box-sizing: border-box;
+}
+
+h1 {
+    margin-top: 0;
+    color: #1c1e21;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border: 1px solid #dddfe2;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 16px; /* Mejoramos la legibilidad en móviles */
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: 10px;
+}
+
+button.success {
+    background-color: #28a745;
+    cursor: default;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button.success:hover {
+    background-color: #28a745;
+}
+
+button:disabled {
+    background-color: #a0a0a0;
+    cursor: not-allowed;
+}
+
+.logout {
+    background-color: #dc3545;
+    margin-top: 20px; /* Añadimos un espacio superior */
+}
+
+.logout:hover {
+    background-color: #c82333;
+}
+
+.hidden {
+    display: none;
+}
+
+/* === ESTILOS PARA LAS TARJETAS DE ASIGNACIÓN (BASE MÓVIL) === */
+#assignments-container {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.assignment-card {
+    background-color: #f9f9f9;
+    border: 1px solid #dddfe2;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.assignment-card h3 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    color: #1c1e21;
+}
+
+.assignment-card p {
+    margin: 0 0 15px 0;
+    color: #606770;
+    font-size: 14px;
+}
+
+.map-placeholder {
+    height: 200px;
+    width: 100%;
+    border-radius: 8px;
+    background-color: #e9e9e9;
+    margin-bottom: 15px;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+}
+
+.check-in-btn, .check-out-btn {
+    flex: 1;
+}
+
+.check-out-btn {
+    background-color: #ffc107;
+}
+.check-out-btn:hover {
+    background-color: #e0a800;
+}
+
+.assignment-card.completed {
+    background-color: #f0fff4;
+    border-color: #28a745;
+}
+
+
+/* ======================================================= */
+/* === PUNTOS DE RUPTURA (MEDIA QUERIES) PARA RESPONSIVE === */
+/* ======================================================= */
+
+/* Para tablets y pantallas más grandes (a partir de 768px de ancho) */
+@media (min-width: 768px) {
+    .container {
+        padding: 40px; /* Volvemos al padding más generoso */
+        max-width: 700px; /* Permitimos que el contenedor sea más ancho */
+    }
+
+    /* Opcional: hacemos los textos un poco más grandes */
+    h1 {
+        font-size: 2.5rem;
+    }
+}
+
+/* Para pantallas de escritorio (a partir de 992px de ancho) */
+@media (min-width: 992px) {
+    .container {
+        max-width: 900px; /* Ancho máximo para el contenedor principal */
+    }
+
+    /* ¡LA MAGIA! Convertimos el contenedor de tarjetas en una parrilla (grid) de 2 columnas */
+    #assignments-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Dos columnas de igual tamaño */
+        gap: 20px; /* Espacio entre las tarjetas */
+    }
+}
+
+/* Para pantallas de escritorio MUY grandes (a partir de 1200px de ancho) */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1100px; /* Aún más ancho para aprovechar el espacio */
+    }
+
+    /* Opcional: podríamos pasar a 3 columnas si quisiéramos */
+    /*
+    #assignments-container {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+    */
+}

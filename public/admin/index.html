@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+    <main class="container">
+        <!-- Panel Principal -->
+        <div id="admin-panel">
+            <header>
+                <h1>Centro de Mando</h1>
+                <p>Bienvenido, <strong id="admin-name-display"></strong></p>
+                <button id="logout-button" class="logout">Cerrar Sesión</button>
+            </header>
+
+            <nav>
+                <button class="nav-btn" data-section="create-section">Crear Perímetros</button>
+                <button class="nav-btn" data-section="edit-section">Editar Perímetros</button>
+                <button class="nav-btn" data-section="assignments-section">Crear Asignaciones</button>
+                <button class="nav-btn active" data-section="dashboard-section">Control de Asistencia</button>
+            </nav>
+
+            <!-- SECCIÓN 1: CREAR PERÍMETROS -->
+            <section id="create-section" class="content-section hidden">
+                <h2>Crear Nuevo Perímetro</h2>
+                <div class="tool-grid">
+                    <div class="form-panel">
+                        <h3>Datos del Perímetro</h3>
+                        <form id="create-perimeter-form">
+                            <label for="create-id">ID del Perímetro:</label>
+                            <input type="text" id="create-id" required placeholder="ID único (ej: surco-01)">
+                            
+                            <label for="create-name">Nombre:</label>
+                            <input type="text" id="create-name" required placeholder="Ej: Parque Kennedy">
+                            
+                            <label for="create-district">Distrito:</label>
+                            <input type="text" id="create-district" required placeholder="Ej: Miraflores">
+                            
+                            <label for="create-radius">Radio (metros):</label>
+                            <input type="number" id="create-radius" required value="100" min="10">
+                            
+                            <p class="instructions">Haz clic en el mapa para establecer el centro.</p>
+                            <button type="submit" id="create-btn" disabled>Guardar Nuevo Perímetro</button>
+                        </form>
+                    </div>
+                    <div class="map-panel">
+                        <div id="create-map" style="height: 400px; width: 100%; border-radius: 8px; background: #e9e9e9;"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN 2: EDITAR PERÍMETROS -->
+            <section id="edit-section" class="content-section hidden">
+                <h2>Editar Perímetros Existentes</h2>
+                <div id="edit-list-view">
+                    <p>Busca y selecciona un perímetro para modificarlo:</p>
+                    <input type="text" id="perimeter-search" class="search-input" placeholder="Buscar por nombre o ID...">
+                    <div id="perimeters-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;"></div>
+                </div>
+                <div id="edit-form-view" class="hidden">
+                    <button id="back-to-list-btn" class="btn-secondary" style="margin-bottom: 20px;">← Volver a la lista</button>
+                    <div class="tool-grid">
+                        <div class="form-panel">
+                            <h3>Editando: <span id="editing-perimeter-name-display" style="color: #007bff;"></span></h3>
+                            <form id="edit-perimeter-form">
+                                <label for="edit-id">ID (No editable):</label>
+                                <input type="text" id="edit-id" disabled style="background-color: #f0f0f0;">
+                                <label for="edit-name">Nombre:</label>
+                                <input type="text" id="edit-name" required>
+                                <label for="edit-district">Distrito:</label>
+                                <input type="text" id="edit-district" required>
+                                <label for="edit-radius">Radio (metros):</label>
+                                <input type="number" id="edit-radius" required min="10">
+                                <p class="instructions">Arrastra el marcador en el mapa para cambiar la ubicación.</p>
+                                <button type="submit" id="update-btn">Guardar Cambios</button>
+                            </form>
+                        </div>
+                        <div class="map-panel">
+                            <div id="edit-map" style="height: 400px; width: 100%; border-radius: 8px; background: #e9e9e9;"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN 3: ASIGNACIONES -->
+            <section id="assignments-section" class="content-section hidden">
+                <h2>Creación de Asignaciones</h2>
+                <div class="tool-grid">
+                    <div class="form-panel">
+                        <h3>Nueva Asignación</h3>
+                        <form id="assignment-form">
+                            <label>Vendedor:</label>
+                            <select id="seller-select" required><option>Cargando...</option></select>
+                            <label>Perímetro:</label>
+                            <select id="perimeter-select" required><option>Cargando...</option></select>
+                            <label>Fecha y Hora:</label>
+                            <input type="datetime-local" id="assignment-datetime" required>
+                            <button type="submit" id="save-assignment-btn">Crear Asignación</button>
+                        </form>
+                    </div>
+                    <div class="list-panel">
+                        <h3>Asignaciones del Día</h3>
+                        <div id="assignments-list"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN 4: DASHBOARD -->
+            <section id="dashboard-section" class="content-section">
+                <h2>Dashboard de Asistencias</h2>
+                <div class="dashboard-filters">
+                    <div class="filter-group"><label>Inicio:</label><input type="date" id="dashboard-start-date"></div>
+                    <div class="filter-group"><label>Fin:</label><input type="date" id="dashboard-end-date"></div>
+                    <div class="filter-group"><label>Vendedor:</label><select id="dashboard-seller-filter"><option value="">Todos</option></select></div>
+                    <div class="filter-group"><label>Perímetro:</label><select id="dashboard-perimeter-filter"><option value="">Todos</option></select></div>
+                    
+                    <button id="dashboard-filter-btn">Filtrar</button>
+                    <!-- NUEVO BOTÓN EXCEL -->
+                    <button id="dashboard-export-btn" class="btn-excel" disabled>Exportar Excel</button>
+                    <button id="dashboard-clear-btn" class="btn-secondary">Limpiar</button>
+                </div>
+                <div class="table-container">
+                    <table id="dashboard-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Vendedor</th>
+                                <th>Perímetro</th>
+                                <th>Hora Asig.</th>
+                                <th>Entrada</th>
+                                <th>Salida</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboard-table-body"><tr><td colspan="7">Selecciona fechas y filtra.</td></tr></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script type="module" src="js/main-admin.js"></script>
+</body>
+</html>
